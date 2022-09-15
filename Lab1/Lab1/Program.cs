@@ -1,8 +1,27 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using Lab1.Collections;
+using Lab1.Entities;
 
-Console.WriteLine("Hello, World!");
+Airport airport = new Airport();
+
+var tariff1 = airport.AddTariff("Belavia", "Moscow", 120, new DateTime(2022,9, 20, 22, 50, 0));
+var tariff2 = airport.AddTariff("Aerfloat", "Moscow", 155, new DateTime(2022, 9, 20, 19, 0, 0));
+var tariff3 = airport.AddTariff("Emirates", "New York City", 1600, new DateTime(2022, 9, 19, 0, 0, 0));
+var tariff4 = airport.AddTariff("Austrian Airlines", "Belgia", 670, new DateTime(2022, 9, 26, 12, 20, 0));
+
+Console.WriteLine($"Common profit: {airport.GetCommonProfit()}");
+
+Console.WriteLine("...");
+
+var passenger1 = airport.RegisterPassenger("qwererqw", 1234, tariff1);
+var passenger2 = airport.RegisterPassenger("qwererqw", 1234, tariff2);
+var passenger3 = airport.RegisterPassenger("fwefw", 4323, tariff4);
+
+
+Console.WriteLine($"Common profit: {airport.GetCommonProfit()}");
+
+Console.WriteLine($"Passenger1: {passenger1.GetTicketsPrice()} Passenger2: {passenger2.GetTicketsPrice()}, Passenger3: {passenger3.GetTicketsPrice()}");
 
 // MyCustomCollection<int> list = new();
 //
