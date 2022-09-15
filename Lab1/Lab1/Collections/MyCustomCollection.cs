@@ -29,13 +29,13 @@ public class MyCustomCollection<T> : ICustomCollection<T> where T : IComparable
             
             var temp = head;
             
-            while (count != 0)
+            while (index != 0)
             {
-                --count;
-                head = head.next;
+                --index;
+                temp = temp.next;
             }
 
-            return head.value;
+            return temp.value;
         }
         set
         {
@@ -92,6 +92,7 @@ public class MyCustomCollection<T> : ICustomCollection<T> where T : IComparable
             head = new Node {value = item, next = null, prev = null};
             tail = head;
             cursor = head;
+            ++count;
             return;
         }
         
@@ -110,12 +111,14 @@ public class MyCustomCollection<T> : ICustomCollection<T> where T : IComparable
         // добавляем в конец
         tail.next = new Node {value = item, next = null, prev = tail};
         tail = tail.next;
+
+        ++count;
     }
 
     public void Remove(T item)
     {
         #nullable disable
-        
+
         var temp = head;
         while (temp != null)
         {
@@ -159,13 +162,15 @@ public class MyCustomCollection<T> : ICustomCollection<T> where T : IComparable
                     }
                 }
 
+                --count;
                 return;
             }
             
             temp = temp.next;
         }
-        
-        #nullable restore
+        --count;
+
+#nullable restore
     }
 
     public T RemoveCurrent()
@@ -175,8 +180,6 @@ public class MyCustomCollection<T> : ICustomCollection<T> where T : IComparable
         
         var cursorVal = cursor.value; 
         
-        #nullable disable
-
         if (cursor.prev == null && cursor.next == null)
         {
             head = null;
@@ -214,9 +217,9 @@ public class MyCustomCollection<T> : ICustomCollection<T> where T : IComparable
                 Reset();
             }
         }
-        
-        #nullable restore
 
+        --count;
+        
         return cursorVal;
     }
 
