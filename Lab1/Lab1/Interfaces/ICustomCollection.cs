@@ -1,6 +1,6 @@
 namespace Lab1.Interfaces;
 
-public interface ICustomCollection<T>
+public interface ICustomCollection<T> where T : IComparable
 {
     T this[int index] { get; set; }
     void Reset();
