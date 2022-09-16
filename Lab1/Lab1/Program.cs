@@ -18,10 +18,15 @@ var passenger1 = airport.RegisterPassenger("qwererqw", 1234, tariff1);
 var passenger2 = airport.RegisterPassenger("qwererqw", 1234, tariff2);
 var passenger3 = airport.RegisterPassenger("fwefw", 4323, tariff4);
 
-
 Console.WriteLine($"Common profit: {airport.GetCommonProfit()}");
 
 Console.WriteLine($"Passenger1: {passenger1.GetTicketsPrice()} Passenger2: {passenger2.GetTicketsPrice()}, Passenger3: {passenger3.GetTicketsPrice()}");
+
+
+int[] arr = new int[]{};
+
+var enumerator = arr.GetEnumerator();
+Console.WriteLine(enumerator.Current);
 
 // MyCustomCollection<int> list = new();
 //
