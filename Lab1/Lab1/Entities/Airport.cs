@@ -5,8 +5,13 @@ namespace Lab1.Entities;
 
 public class Airport
 {
-    private MyCustomCollection<Tariff> tariffs = new();
-    private MyCustomCollection<Passenger> passengers = new();
+    private readonly MyCustomCollection<Tariff> _tariffs = new();
+    private readonly MyCustomCollection<Passenger> _passengers = new();
+    
+
+    public event EventHandler<Tariff>? TariffsChanged;
+    public event EventHandler<Passenger>? PassengersChanged;
+
 
     public Tariff AddTariff(string airline, string directionName, decimal price, DateTime dateTimeOfDeparture)
     {
@@ -20,49 +25,59 @@ public class Airport
         
         try
         {
-            tariffs.Add(tariff);
+            _tariffs.Add(tariff);
         }
         catch(InvalidOperationException)
         {
             throw new ApplicationException("this tariff already exist");
         }
 
+        // если хоть кто-то подписан то уведомляем о изменение  
+        if(TariffsChanged != null) TariffsChanged(this, tariff);
+
         return tariff;
     }
 
     public Passenger RegisterPassenger(string FIO, int passportId, Tariff tariff)
     {
-        for (var i = 0; i < passengers.Count; ++i)
+        // проверяем не покупал ли пассажир билеты ранее 
+        for (var i = 0; i < _passengers.Count; ++i)
         {
-            if (passengers[i].PassportId == passportId)
+            // если покупал добавим билет в список билетов
+            if (_passengers[i].PassportId == passportId)
             {
                 try
                 {
-                    passengers[i].PassengerTariffs?.Add(tariff);
+                    _passengers[i].PassengerTickets.Add(tariff);
                 }
                 catch (InvalidOperationException)
                 {
                     throw new ApplicationException("passenger has already used this tariff");
                 }
 
-                return passengers[i];
+                return _passengers[i];
             }
         }
 
+        //добавляем пассажира в коллекцию
+        
         // init collection
         MyCustomCollection<Tariff> passengerTariffs = new();
         passengerTariffs.Add(tariff);
 
         // init new passenger
         var passenger = new Passenger
-        {
-            FIO = FIO,
-            PassportId = passportId,
-            PassengerTariffs = passengerTariffs
-        };
+        (
+            FIO,
+            passportId,
+            passengerTariffs
+        );
 
         // add passenger
-        passengers.Add(passenger);
+        _passengers.Add(passenger);
+        
+        // если хоть кто-то подписан то уведомляем о изменение  
+        if (PassengersChanged != null) PassengersChanged(this, passenger);
 
         return passenger;
     }
@@ -75,9 +90,9 @@ public class Airport
     public decimal GetCommonProfit()
     {
         decimal commonProfit = 0;
-        for (int i = 0; i < passengers.Count; ++i)
+        for (var i = 0; i < _passengers.Count; ++i)
         {
-            commonProfit += passengers[i].GetTicketsPrice();
+            commonProfit += _passengers[i].GetTicketsPrice();
         }
 
         return commonProfit;

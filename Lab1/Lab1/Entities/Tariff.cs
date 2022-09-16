@@ -7,6 +7,12 @@ public class Tariff : IComparable
     public decimal Price { get; init; }
     public DateTime DateTimeOfDeparture { get; init; }
     
+    
+    public override string ToString()
+    {
+        return $"airline: {Airline}   direction name: {DirectionName}   price: {Price}   date and time of departure: {DateTimeOfDeparture}";
+    }
+
 
     public int CompareTo(object? obj)
     {

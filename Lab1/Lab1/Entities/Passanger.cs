@@ -4,18 +4,31 @@ namespace Lab1.Entities;
 
 public class Passenger : IComparable
 {
-    public string FIO { get; init; } = "Undefined";
-    public int PassportId { get; init; }
-    public MyCustomCollection<Tariff> PassengerTariffs { get; init; }
+    public string Fio { get; }
+    public int PassportId { get; }
+    public MyCustomCollection<Tariff> PassengerTickets { get;}
     
+    // public event EventHandler Ticket;
+
+    public Passenger(string fio, int passportId, MyCustomCollection<Tariff> passengerTickets)
+    {
+        Fio = fio;
+        PassportId = passportId;
+        PassengerTickets = passengerTickets;
+    }
+    
+    public override string ToString()
+    {
+        return $"name: {Fio}   passport id: {PassportId}";
+    }
     
     public decimal GetTicketsPrice()
     {
         decimal commonPrice = 0;
         
-        for (int i = 0; i < PassengerTariffs.Count; ++i)
+        for (var i = 0; i < PassengerTickets.Count; ++i)
         {
-            commonPrice += PassengerTariffs[i].Price;
+            commonPrice += PassengerTickets[i].Price;
         }
 
         return commonPrice;
