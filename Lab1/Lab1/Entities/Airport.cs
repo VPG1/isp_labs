@@ -48,7 +48,7 @@ public class Airport
             {
                 try
                 {
-                    _passengers[i].PassengerTickets.Add(tariff);
+                    _passengers[i].AddTicket(tariff);
                 }
                 catch (InvalidOperationException)
                 {

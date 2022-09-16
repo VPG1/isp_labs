@@ -19,9 +19,19 @@ var tariff4 = airport.AddTariff("Austrian Airlines", "Belgia", 670, new DateTime
 //
 // Console.WriteLine("...");
 
-var passenger1 = airport.RegisterPassenger("qwererqw", 1234, tariff1);
+var passenger1 = airport.RegisterPassenger("qwererqw", 1234, tariff1); 
+passenger1.TicketsCollectionChanged += (sender, tariff) =>
+{
+    if (sender == null) return;
+    Passenger passenger = (Passenger)sender;
+    Console.WriteLine($"Passenger with passport id: {passenger.PassportId} buy ticket: {tariff}");
+};
+
 var passenger2 = airport.RegisterPassenger("qwererqw", 1234, tariff2);
 var passenger3 = airport.RegisterPassenger("fwefw", 4323, tariff4);
+
+
+ 
 
 // Console.WriteLine($"Common profit: {airport.GetCommonProfit()}");
 //

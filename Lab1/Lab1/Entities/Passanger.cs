@@ -8,7 +8,7 @@ public class Passenger : IComparable
     public int PassportId { get; }
     public MyCustomCollection<Tariff> PassengerTickets { get;}
     
-    // public event EventHandler Ticket;
+    public event EventHandler<Tariff>? TicketsCollectionChanged;
 
     public Passenger(string fio, int passportId, MyCustomCollection<Tariff> passengerTickets)
     {
@@ -20,6 +20,13 @@ public class Passenger : IComparable
     public override string ToString()
     {
         return $"name: {Fio}   passport id: {PassportId}";
+    }
+
+    public void AddTicket(Tariff tariff)
+    {
+        PassengerTickets.Add(tariff);
+        
+        TicketsCollectionChanged?.Invoke(this, tariff);
     }
     
     public decimal GetTicketsPrice()
