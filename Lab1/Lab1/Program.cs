@@ -2,9 +2,11 @@
 
 using Lab1.Collections;
 using Lab1.Entities;
+using Lab1.Exceptions;
 
-Airport airport = new Airport();
-Journal journal = new Journal();
+var airport = new Airport();
+var journal = new Journal();
+journal.WriteToConsole = true;
 
 airport.PassengersChanged += journal.PassengersChanged;
 airport.TariffsChanged += journal.TariffsChanged;
@@ -27,37 +29,50 @@ passenger1.TicketsCollectionChanged += (sender, tariff) =>
     Console.WriteLine($"Passenger with passport id: {passenger.PassportId} buy ticket: {tariff}");
 };
 
+
 var passenger2 = airport.RegisterPassenger("qwererqw", 1234, tariff2);
 var passenger3 = airport.RegisterPassenger("fwefw", 4323, tariff4);
 
-
- 
-
-// Console.WriteLine($"Common profit: {airport.GetCommonProfit()}");
-//
-// Console.WriteLine($"Passenger1: {passenger1.GetTicketsPrice()} Passenger2: {passenger2.GetTicketsPrice()}, Passenger3: {passenger3.GetTicketsPrice()}");
+Console.WriteLine();
 
 
-// MyCustomCollection<int> list = new();
-//
-// list.Add(12);
-// list.Add(13);
-// list.Add(14);
-// list.Add(15);
-// list.Add(16);
-//
-// list.Remove(16);
-// list.Remove(13);
-// list.Remove(12);
-// list.Remove(14);
-// list.Remove(15);
+MyCustomCollection<int> list = new();
+
+list.Add(12);
+list.Add(13);
+list.Add(14);
+list.Add(15);
+list.Add(16);
+
+
+foreach (var el in list)
+{
+    Console.Write($"{el} ");
+}
+Console.WriteLine();
+
+list.Remove(16);
+list.Remove(13);
+list.Remove(12);
+list.Remove(14);
+list.Remove(15);
+
+try
+{
+    list.Remove(0);
+}
+catch(RemoveException)
+{
+    Console.WriteLine("Remove exception here");
+}
+
 //
 // list.Add(51);
 // list.Add(13);
 // list.Add(14);
 // list.Add(15);
 // list.Add(16);
-//
+
 //
 //
 // list.Print();

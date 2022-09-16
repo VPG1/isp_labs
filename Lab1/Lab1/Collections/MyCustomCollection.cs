@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Specialized;
+using Lab1.Exceptions;
 
 namespace Lab1.Collections;
 
@@ -9,30 +10,22 @@ public class MyCustomCollection<T> : IEnumerable<T>, ICustomCollection<T> where 
 {
     private class Node
     {
-        public T val;
-        public Node? next = null;
-        public Node? prev = null;
+        public T Val;
+        public Node? Next = null;
+        public Node? Prev = null;
 
 
         public Node(T val, Node? next, Node? prev)
         {
-            this.val = val;
-            this.next = next;
-            this.prev = prev;
+            this.Val = val;
+            this.Next = next;
+            this.Prev = prev;
         }
     }
 
     
 
-    IEnumerator<T> IEnumerable<T>.GetEnumerator()
-    {
-        return new CollectionEnum(_head);
-    }
 
-    public IEnumerator GetEnumerator()
-    {
-        return new CollectionEnum(_head);
-    }
 
     private Node? _head = null;
     private Node? _tail = null;
@@ -53,10 +46,10 @@ public class MyCustomCollection<T> : IEnumerable<T>, ICustomCollection<T> where 
             while (index != 0)
             {
                 --index;
-                temp = temp.next;
+                temp = temp!.Next;
             }
 
-            return temp.val;
+            return temp!.Val;
         }
         set
         {
@@ -71,10 +64,10 @@ public class MyCustomCollection<T> : IEnumerable<T>, ICustomCollection<T> where 
             while (_count != 0)
             {
                 --_count;
-                _head = _head.next;
+                _head = _head!.Next;
             }
 
-            _head.val = value;
+            _head!.Val = value;
 
         }
     }
@@ -86,16 +79,16 @@ public class MyCustomCollection<T> : IEnumerable<T>, ICustomCollection<T> where 
 
     public void Next()
     {
-        if (_cursor is null) throw new IndexOutOfRangeException("zero elements in the collection");
+        if (_cursor is null) throw new IndexOutOfRangeException("ero elements in the collection.");
         
-        _cursor = _cursor.next ?? throw new IndexOutOfRangeException("cursor on the last element of the collection");
+        _cursor = _cursor.Next ?? throw new IndexOutOfRangeException("Cursor on the last element of the collection.");
     }
 
     public T Current()
     {
-        if (_cursor is null) throw new NullReferenceException("zero elements in the collection");
+        if (_cursor is null) throw new InvalidOperationException("Zero elements in the collection.");
         
-        return _cursor.val;
+        return _cursor.Val;
     }
 
     public int Count
@@ -121,63 +114,62 @@ public class MyCustomCollection<T> : IEnumerable<T>, ICustomCollection<T> where 
         var temp = _head;
         while (temp != null)
         {
-            if (temp.val.CompareTo(item) == 0)
+            if (temp.Val.CompareTo(item) == 0)
             {
-                throw new InvalidOperationException("this item is already in the collection");
+                throw new InvalidOperationException("This item is already in the collection.");
             }
 
-            temp = temp.next;
+            temp = temp.Next;
         }
         
         // добавляем в конец
-        _tail.next = new Node(item, null, _tail);
-        _tail = _tail.next;
+        _tail.Next = new Node(item, null, _tail);
+        _tail = _tail.Next;
 
         ++_count;
     }
 
     public void Remove(T item)
     {
-        #nullable disable
 
         var temp = _head;
         while (temp != null)
         {
-            if (temp.val.CompareTo(item) == 0)
+            if (temp.Val.CompareTo(item) == 0)
             {
-                if (temp.prev == null && temp.next == null)
+                if (temp.Prev == null && temp.Next == null)
                 {
                     _head = null;
                     _tail = null;
                     
                     Reset();
                 }
-                else if (temp.prev == null)
+                else if (temp.Prev == null)
                 {
-                    _head = temp.next;
-                    temp.next.prev = temp.prev;
+                    _head = temp.Next;
+                    temp!.Next!.Prev = temp.Prev;
                     
-                    if (temp.val.CompareTo(_cursor.val) == 0)
+                    if (temp.Val.CompareTo(_cursor!.Val) == 0)
                     {
                         Reset();
                     }
                 }
-                else if (temp.next == null)
+                else if (temp.Next == null)
                 {
-                    _tail = temp.prev;
-                    temp.prev.next = temp.next;
+                    _tail = temp.Prev;
+                    temp.Prev.Next = temp.Next;
                     
-                    if (temp.val.CompareTo(_cursor.val) == 0)
+                    if (temp.Val.CompareTo(_cursor!.Val) == 0)
                     {
                         Reset();
                     }
                 }
                 else
                 {
-                    temp.prev.next = temp.next;
-                    temp.next.prev = temp.prev;
+                    temp.Prev.Next = temp.Next;
+                    temp.Next.Prev = temp.Prev;
                     
-                    if (temp.val.CompareTo(_cursor.val) == 0)
+                    if (temp.Val.CompareTo(_cursor!.Val) == 0)
                     {
                         Reset();
                     }
@@ -187,53 +179,53 @@ public class MyCustomCollection<T> : IEnumerable<T>, ICustomCollection<T> where 
                 return;
             }
             
-            temp = temp.next;
+            temp = temp.Next;
         }
-        --_count;
 
-#nullable restore
+        throw new RemoveException("There is no such element in the collection.");
+        
     }
 
     public T RemoveCurrent()
     {
         
-        if (_cursor == null) throw new InvalidOperationException("zero elements in Cursor");
+        if (_cursor == null) throw new InvalidOperationException("Zero elements in Cursor.");
         
-        var cursorVal = _cursor.val; 
+        var cursorVal = _cursor.Val; 
         
-        if (_cursor.prev == null && _cursor.next == null)
+        if (_cursor.Prev == null && _cursor.Next == null)
         {
             _head = null;
             _tail = null;
                     
             Reset();
         }
-        else if (_cursor.prev == null)
+        else if (_cursor.Prev == null)
         {
-            _head = _cursor.next;
-            _cursor.next.prev = _cursor.prev;
+            _head = _cursor.Next;
+            _cursor!.Next!.Prev = _cursor.Prev;
                     
-            if (_cursor.val.CompareTo(_cursor.val) == 0)
+            if (_cursor.Val.CompareTo(_cursor.Val) == 0)
             {
                 Reset();
             }
         }
-        else if (_cursor.next == null)
+        else if (_cursor.Next == null)
         {
-            _tail = _cursor.prev;
-            _cursor.prev.next = _cursor.next;
+            _tail = _cursor.Prev;
+            _cursor.Prev.Next = _cursor.Next;
                     
-            if (_cursor.val.CompareTo(_cursor.val) == 0)
+            if (_cursor.Val.CompareTo(_cursor.Val) == 0)
             {
                 Reset();
             }
         }
         else
         {
-            _cursor.prev.next = _cursor.next;
-            _cursor.next.prev = _cursor.prev;
+            _cursor.Prev.Next = _cursor.Next;
+            _cursor.Next.Prev = _cursor.Prev;
                     
-            if (_cursor.val.CompareTo(_cursor.val) == 0)
+            if (_cursor.Val.CompareTo(_cursor.Val) == 0)
             {
                 Reset();
             }
@@ -250,11 +242,21 @@ public class MyCustomCollection<T> : IEnumerable<T>, ICustomCollection<T> where 
         var temp = _head;
         while (temp != null)
         {
-            Console.WriteLine(temp.val);
-            temp = temp.next;
+            Console.WriteLine(temp.Val);
+            temp = temp.Next;
         }
     }
     
+    
+    // // public IEnumerator IEnumerable<T>.GetEnumerator()
+    // // {
+    // //     return new CollectionEnum(_head);
+    // // }
+    //
+    // IEnumerator GetEnumerator()
+    // {
+    //     return new CollectionEnum(_head);
+    // }
     
     // Enumerator class
     private class CollectionEnum : IEnumerator<T>
@@ -262,12 +264,14 @@ public class MyCustomCollection<T> : IEnumerable<T>, ICustomCollection<T> where 
         private readonly Node? _head;
         
         private Node? _current;
+        
+        
         object IEnumerator.Current
         {
             get
             {
                 if (_current == null) throw new InvalidOperationException("Zero elements in collection. Try to call MoveNext.");
-                return _current.val;
+                return _current.Val;
             }
         }
 
@@ -276,13 +280,14 @@ public class MyCustomCollection<T> : IEnumerable<T>, ICustomCollection<T> where 
             get
             {
                 if (_current == null) throw new InvalidOperationException("Zero elements in collection. Try to call MoveNext.");
-                return _current.val;
+                return _current.Val;
             }
         }
 
         public CollectionEnum(Node? head)
         {
-            this._head = head;
+            _head = head;
+            _current = _head;
         }
 
         public void Reset()
@@ -292,8 +297,8 @@ public class MyCustomCollection<T> : IEnumerable<T>, ICustomCollection<T> where 
         
         public bool MoveNext()
         {
-            if (_current?.next == null) return false;
-            _current = _current.next;
+            if (_current?.Next == null) return false;
+            _current = _current.Next;
             return true;
         }
         
@@ -301,5 +306,15 @@ public class MyCustomCollection<T> : IEnumerable<T>, ICustomCollection<T> where 
         {
             // ??
         }
+    }
+
+    public IEnumerator<T> GetEnumerator()
+    {
+        return new CollectionEnum(_head);
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }

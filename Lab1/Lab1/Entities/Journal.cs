@@ -7,7 +7,7 @@ public class Journal
     private readonly MyCustomCollection<Tariff> _tariffs = new();
     private readonly MyCustomCollection<Passenger> _passengers = new();
 
-    public bool WriteToConsole { get; set; } = true;
+    public bool WriteToConsole { get; set; } = false;
 
     public void TariffsChanged(object sender, Tariff tariff)
     {
