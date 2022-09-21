@@ -27,9 +27,8 @@ var saveData = type.GetMethod("SaveData");
 saveData?.Invoke(fileService, new object[] { employees1, "data.json" });
 
 var readFile = type.GetMethod("ReadFile");
-var employees = readFile?.Invoke(fileService, new object[] { "data.json" }) as IEnumerable<Employee>;
 
-if (employees != null)
+if (readFile?.Invoke(fileService, new object[] { "data.json" }) is IEnumerable<Employee> employees)
     foreach (var employee in employees)
     {
         Console.WriteLine($"{employee.Name} {employee.Payment} {employee.OnSickLeave}");
