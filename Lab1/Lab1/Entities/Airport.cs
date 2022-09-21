@@ -78,6 +78,7 @@ public class Airport
         
         // если хоть кто-то подписан то уведомляем о изменение  
         if (PassengersChanged != null) PassengersChanged(this, passenger);
+        //PassengersChanged?.Invoke();
 
         return passenger;
     }
