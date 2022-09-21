@@ -47,4 +47,10 @@ public class Passenger : IComparable
 
         return PassportId.CompareTo(passenger.PassportId);
     }
+    
+    public IEnumerable<decimal> GetPaymentForDirections()
+    {
+        return from el in (from ticket in PassengerTickets group ticket by ticket.DirectionName) 
+            select el.Sum(t => t.Price);
+    }
 }

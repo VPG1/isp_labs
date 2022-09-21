@@ -29,6 +29,8 @@ passenger1.TicketsCollectionChanged += (sender, tariff) =>
 
 
 var passenger2 = airport.RegisterPassenger("qwererqw", 1234, tariff2);
+var passenger4 = airport.RegisterPassenger("qwererqw", 1234, tariff3);
+
 var passenger3 = airport.RegisterPassenger("fwefw", 4323, tariff4);
 
 Console.WriteLine();
@@ -38,4 +40,27 @@ var tariffsId = airport.GetSortedTariffsId();
 foreach (var tariffId in tariffsId)
 {
     Console.WriteLine(tariffId);
+}
+
+Console.WriteLine();
+
+Console.WriteLine(airport.GetNameOfMostProfitablePassenger());
+
+Console.WriteLine();
+
+Console.WriteLine(airport.GetNumOfPassengerWitchPayMoreThan(500));
+Console.WriteLine(airport.GetNumOfPassengerWitchPayMoreThan(100));
+
+Console.WriteLine();
+
+foreach (var el in passenger1.GetPaymentForDirections())
+{
+    Console.WriteLine(el);
+}
+
+Console.WriteLine();
+
+foreach (var el in passenger3.GetPaymentForDirections())
+{
+    Console.WriteLine(el);
 }

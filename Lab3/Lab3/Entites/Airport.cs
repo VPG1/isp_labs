@@ -81,4 +81,15 @@ public class Airport
     {
         return from p in _tariffIdToTicket orderby p.Key select p.Key;
     }
+
+    public string? GetNameOfMostProfitablePassenger()
+    {
+        return _passengers.MaxBy(p => p.GetTicketsPrice())?.Fio;
+    }
+
+    public int GetNumOfPassengerWitchPayMoreThan(decimal payment)
+    {
+        return _passengers.Count(x => x.GetTicketsPrice() >= payment);
+    }
+    
 }
