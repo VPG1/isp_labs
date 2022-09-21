@@ -76,4 +76,9 @@ public class Airport
         // var a = from p in _passengers 
         return _passengers.Sum(t => t.GetTicketsPrice());
     }
+
+    public IEnumerable<string> GetSortedTariffsId()
+    {
+        return from p in _tariffIdToTicket orderby p.Key select p.Key;
+    }
 }

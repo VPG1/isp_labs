@@ -11,7 +11,7 @@ airport.TariffsChanged += journal.TariffsChanged;
 
 
 var tariff1 = airport.AddTariff("adce1234","Belavia", "Moscow", 120, new DateTime(2022,9, 20, 22, 50, 0));
-var tariff2 = airport.AddTariff("adce1244","Aerfloat", "Moscow", 155, new DateTime(2022, 9, 20, 19, 0, 0));
+var tariff2 = airport.AddTariff("ldce1244","Aerfloat", "Moscow", 155, new DateTime(2022, 9, 20, 19, 0, 0));
 var tariff3 = airport.AddTariff("adce1254","Emirates", "New York City", 1600, new DateTime(2022, 9, 19, 0, 0, 0));
 var tariff4 = airport.AddTariff("adce1334","Austrian Airlines", "Belgia", 670, new DateTime(2022, 9, 26, 12, 20, 0));
 
@@ -30,3 +30,12 @@ passenger1.TicketsCollectionChanged += (sender, tariff) =>
 
 var passenger2 = airport.RegisterPassenger("qwererqw", 1234, tariff2);
 var passenger3 = airport.RegisterPassenger("fwefw", 4323, tariff4);
+
+Console.WriteLine();
+
+var tariffsId = airport.GetSortedTariffsId();
+
+foreach (var tariffId in tariffsId)
+{
+    Console.WriteLine(tariffId);
+}
