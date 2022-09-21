@@ -64,6 +64,6 @@ public class MySerializer : ISerializer
     public void SerializeByJson(IEnumerable<Factory> factories, string fileName)
     {
         using var fs = new FileStream(fileName, FileMode.OpenOrCreate);
-        JsonSerializer.Serialize<Factory[]>(fs, factories.ToArray());
+        JsonSerializer.Serialize(fs, factories.ToArray());
     }
 }
