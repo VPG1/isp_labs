@@ -32,15 +32,18 @@ foreach (var thread in threads)
     thread.Join();
 }
 
-// foreach (var el in results)
-// {
-//     Console.WriteLine(el);
-// }
+Console.Clear();
+
+for (var i = 0; i < 5; ++i)
+{
+    Console.WriteLine($"Поток {IntegralCalculationClass.CurPercents[i].Key}: Завершен с результатом: {results[i]}");
+}
 
 string StatusBarView(KeyValuePair<int, int> threadIdToPercent)
 {
 
-    string statusBarString = $"Поток {threadIdToPercent.Key} [";
+    string statusBarString = $"Поток {threadIdToPercent.Key}:";
+    statusBarString += "[";
     
     if (threadIdToPercent.Value != 100)
     {
@@ -57,18 +60,19 @@ string StatusBarView(KeyValuePair<int, int> threadIdToPercent)
         {
             statusBarString += " ";
         }
+        
     }
     else
     {
-        for (int i = 0; i < 20; ++i)
+        for(var i = 0; i < 20; ++i)
         {
             statusBarString += "=";
         }
     }
-
+    
     statusBarString += "]";
-
     statusBarString += $"{threadIdToPercent.Value}%";
+
 
     return statusBarString;
 }
