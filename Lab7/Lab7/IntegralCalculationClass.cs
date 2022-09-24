@@ -4,6 +4,7 @@ namespace Lab7;
 
 public  class IntegralCalculationClass
 {
+    private static readonly Mutex Mutex = new Mutex();
     private static readonly Semaphore Semaphore = new Semaphore(2, 5);
     public static readonly List<KeyValuePair<int, int>> CurPercents = new()
     {
@@ -27,7 +28,9 @@ public  class IntegralCalculationClass
             res += delta * Math.Sin(cur);
             if ((int)(cur * 100) > (int)((cur - delta) * 100))
             {
+                Mutex.WaitOne();
                 Handler?.Invoke(this, EventArgs.Empty);
+                Mutex.ReleaseMutex();
                 CurPercents[index] = new KeyValuePair<int, int>(Thread.CurrentThread.ManagedThreadId, (int)(cur * 100));
             }
         }
