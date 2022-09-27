@@ -2,9 +2,10 @@ using System.Security.Principal;
 
 namespace Lab8;
 
+[Serializable()]
 public class Employee
 {
-    public int Id { get; };
+    public int Id { get; }
     public string Name { get; }
     public int Age { get; }
     
