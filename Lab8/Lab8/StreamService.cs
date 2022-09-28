@@ -17,8 +17,8 @@ public class StreamService<T>
 {
     // private static BinaryFormatter _binaryFormatter = new();
 
-    private readonly IProgress<int> _progressBar1 = new Progress<int>(percent => Console.Write($"\rWrite to stream: {percent}%"));
-    private readonly IProgress<int> _progressBar2 = new Progress<int>(percent => Console.Write($"\rCopy to file: {percent}%"));
+    private readonly IProgress<int> _progressBar1 = new MyProgress<int>(percent => Console.Write($"\rWrite to stream: {percent}%"));
+    private readonly IProgress<int> _progressBar2 = new MyProgress<int>(percent => Console.Write($"\rCopy to file: {percent}%"));
 
 
     public async Task WriteToStreamAsync(Stream stream, IEnumerable<T> data)
@@ -31,7 +31,7 @@ public class StreamService<T>
         foreach (var el in data)
         {
             if (curCount != 0) await stream.WriteAsync(Encoding.ASCII.GetBytes(","));
-            await Task.Delay(10);
+            // await Task.Delay(1);
             curCount++;
             _progressBar1.Report(curCount * 100 / dataSize);
             await JsonSerializer.SerializeAsync(stream, el);
@@ -59,7 +59,7 @@ public class StreamService<T>
         while ((read = await stream.ReadAsync(buffer, 0, buffer.Length)) > 0)
         {
             curNumOfBytes += read;
-            await Task.Delay(10);
+            // await Task.Delay(1);
             await fs.WriteAsync(buffer, 0, read);
             _progressBar2.Report((int)(curNumOfBytes * 100 / streamLen));
         }
