@@ -17,8 +17,8 @@ public class StreamService<T>
 {
     // private static BinaryFormatter _binaryFormatter = new();
 
-    private readonly IProgress<double> _progressBar1 = new MyProgress<double>(percent => Console.Write($"\rWrite to stream: {(int)percent}%"));
-    private readonly IProgress<double> _progressBar2 = new MyProgress<double>(percent => Console.Write($"\rCopy to file: {(int)percent}%"));
+    private readonly IProgress<int> _progressBar1 = new Progress<int>(percent => Console.Write($"\rWrite to stream: {percent}%"));
+    private readonly IProgress<int> _progressBar2 = new Progress<int>(percent => Console.Write($"\rCopy to file: {percent}%"));
 
 
     public async Task WriteToStreamAsync(Stream stream, IEnumerable<T> data)
@@ -31,10 +31,11 @@ public class StreamService<T>
         foreach (var el in data)
         {
             if (curCount != 0) await stream.WriteAsync(Encoding.ASCII.GetBytes(","));
-            await Task.Delay(1);
+            await Task.Delay(10);
             curCount++;
-            _progressBar1.Report(curCount * 100 / (double)dataSize);
-            await stream.WriteAsync(Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(el)));
+            _progressBar1.Report(curCount * 100 / dataSize);
+            await JsonSerializer.SerializeAsync(stream, el);
+            // await stream.WriteAsync(Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(el)));
         }
         await stream.WriteAsync(Encoding.ASCII.GetBytes("]"));
         
@@ -48,8 +49,9 @@ public class StreamService<T>
     public async Task CopyFromStreamAsync(Stream stream, string fileName)
     {
         Console.WriteLine($"CopyFromStreamAsync thread id: {Thread.CurrentThread.ManagedThreadId}");
-        
+
         await using var fs = new FileStream(fileName, FileMode.Create);
+
         int read;
         var buffer = new byte[100];
         var streamLen = stream.Length;
@@ -57,12 +59,9 @@ public class StreamService<T>
         while ((read = await stream.ReadAsync(buffer, 0, buffer.Length)) > 0)
         {
             curNumOfBytes += read;
-            await Task.Delay(1);
+            await Task.Delay(10);
             await fs.WriteAsync(buffer, 0, read);
-            _progressBar2.Report(curNumOfBytes * 100 / (double)streamLen);
-            // _ = await stream.ReadAsync(buffer,  0, buffer.Length);
-            // Console.WriteLine(Convert.ToString(buffer));
-            // await fs.WriteAsync(buffer);
+            _progressBar2.Report((int)(curNumOfBytes * 100 / streamLen));
         }
         
         Console.WriteLine();
