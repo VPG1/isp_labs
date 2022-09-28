@@ -20,12 +20,12 @@ for (var i = 0; i < numOfEmployees; ++i)
 Console.WriteLine($"Thread id: {Thread.CurrentThread.ManagedThreadId}");
 Console.WriteLine("Work has begun...\n");
 
-await streamService.WriteToStreamAsync(ms, employees);
+var task1 = streamService.WriteToStreamAsync(ms, employees);
 Thread.Sleep(200); 
-await streamService.CopyFromStreamAsync(ms, "file.txt");
+var task2 = streamService.CopyFromStreamAsync(ms, "file.txt");
 
-// await task1;
-// await task2;
+await task1;
+await task2;
 
 Console.WriteLine(await streamService.GetStatisticAsync("file.txt", employee => employee.Age >= 35));
 
